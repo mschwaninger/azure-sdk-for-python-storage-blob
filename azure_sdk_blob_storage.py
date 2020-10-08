@@ -54,6 +54,19 @@ try:
 
     # Upload the created file, use local_file_name for the blob name.
     block_blob_service.create_blob_from_path(container_name, local_file_name, full_path_to_file)
+    
+        #name of the container
+    generator = block_blob_service.list_blobs(container_name)
+
+    #code below lists all the blobs in the container and downloads them one after another
+    for blob in generator:
+        print(blob.name)
+        if blob.name.endswith('.json'):
+            full_path_to_file = os.path.join(local_path, blob.name )
+            block_blob_service.get_blob_to_path(container_name, blob.name, full_path_to_file)
+        else:
+            print("Wrong or no file extension: " +  blob.name)
+    
 except Exception as exep:
     print(exep)
 
